@@ -34,6 +34,8 @@ fruitvice_normalize = pandas.json_normalize(fruityvice_response.json())
 fruitvice_normalize = fruitvice_normalize.set_index('name')
 streamlit.dataframe(fruitvice_normalize) # Display the API response on the page
 
+streamlit.stop()
+
 # Snowflake connection
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
