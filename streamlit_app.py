@@ -25,15 +25,25 @@ streamlit.dataframe(fruits_to_show)
 
 ## New section to display Fruitvice API response
 streamlit.header('Fruitvice Fruit Advice!')
-fruit_choice = streamlit.text_input("What fruit do you want to know about?", "kiwi")
-streamlit.write("You selected", fruit_choice)
+try:
+    fruit_choice = streamlit.text_input("What fruit do you want to know about?")
+    if not fruit_choice:
+        streamlit.error("Please select a fruit to get information about")
+    else:
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+        fruitvice_normalize = pandas.json_normalize(fruityvice_response.json())
+        fruitvice_normalize = fruitvice_normalize.set_index('name')
+        streamlit.dataframe(fruitvice_normalize)
 
-# import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-fruitvice_normalize = pandas.json_normalize(fruityvice_response.json())
-fruitvice_normalize = fruitvice_normalize.set_index('name')
-streamlit.dataframe(fruitvice_normalize) # Display the API response on the page
+except URLError as e:
+    streamlit.error(
+        """
+        **This demo requires internet access.**
 
+        Connection error: %s
+        """
+        % e.reason
+    )
 streamlit.stop()
 
 # import snpwflake.connector
