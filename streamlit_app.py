@@ -37,6 +37,7 @@ streamlit.dataframe(fruitvice_normalize) # Display the API response on the page
 # Snowflake connection
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
-my_cur.execute("SELECT current_user(), current_account(), current_region()")
+my_cur.execute("select * from fruit_load_list")
 my_data_row = my_cur.fetchone()
-streamlit.text("Hello from Snowflake: " + my_data_row[0] + " in account: " + my_data_row[1] + " in region: " + my_data_row[2])
+streamlit.text("The fruit load list contains:  ")
+streamlit.text(my_data_row)
